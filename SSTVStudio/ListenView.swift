@@ -28,6 +28,13 @@ final class MicListener: ObservableObject {
         bufferLock.lock(); buffer.removeAll(); bufferLock.unlock()
         decoded = nil
         decoding = false
+        // Keep the screen awake while listening. Without this, auto-lock
+        // suspends mic capture mid-picture (the app has no background
+        // audio mode unless Info.plist adds one) and the decode comes out
+        // half-done: good audio at the top, noise at the bottom.
+        DispatchQueue.main.async {
+            UIApplication.shared.isIdleTimerDisabled = true
+        }
         let session = AVAudioSession.sharedInstance()
         do {
             try session.setCategory(.record, mode: .measurement)
@@ -66,7 +73,11 @@ final class MicListener: ObservableObject {
         }
         engine = nil
         isListening = false
-        DispatchQueue.main.async { [weak self] in self?.level = 0 }
+        DispatchQueue.main.async { [weak self] in
+            self?.level = 0
+            // Listening is over — the screen may sleep again.
+            UIApplication.shared.isIdleTimerDisabled = false
+        }
     }
 
     private func handleTap(buffer avBuffer: AVAudioPCMBuffer) {

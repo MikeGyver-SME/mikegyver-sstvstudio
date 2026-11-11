@@ -81,3 +81,20 @@ project file is internally consistent (all 37 IDs resolve, braces
 balanced), and the Swift files are balanced — but the first Xcode build
 is the real test. If it throws a build error, paste it back and I'll fix
 it the same turn.
+
+## Changelog
+
+- **v1.0.0** — First build. Listen / Make / Decode.
+- **v1.0.1** (build 2) — Icon fix 1: generated all 9 AppIcon sizes and
+  added `CFBundleIconName` (fixes altool 90713 / 90022).
+- **v1.0.2** (build 3) — Icon fix 2: the 1024 icon moved to the
+  `ios-marketing` slot and the `universal` (Any Appearance) slot (fixes
+  altool 91111). Green on TestFlight.
+- **v1.0.3** (build 4) — Screen-sleep fix. While listening, the app now
+  keeps the screen awake (`isIdleTimerDisabled`), because auto-lock was
+  suspending mic capture mid-picture — the decode came out half-done
+  (good audio at the top, green static at the bottom). Also adds the
+  `audio` background mode to Info.plist, so even if the screen does lock
+  the mic keeps capturing and the picture appears when the phone wakes.
+  After this fix you can hold the phone close to the speaker *and* keep
+  the screen on — no more choosing between the two.
