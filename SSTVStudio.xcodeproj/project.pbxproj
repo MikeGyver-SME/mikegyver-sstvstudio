@@ -14,6 +14,10 @@
 		6707CE84E7F64E979A980361 /* MakeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26379819D7E24A779478FFBC /* MakeView.swift */; };
 		891B2920869A4B768987B8AC /* DecodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69F6455809B54F7D90147A2B /* DecodeView.swift */; };
 		2095553794264E7AA34EB4DD /* ShareSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3DD7C15A59447A098132756 /* ShareSheet.swift */; };
+		FADDF791925ECFEBCDEBC1FC /* GalleryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7253B5FD74199097D70DA3ED /* GalleryStore.swift */; };
+		488F470A669809222508D4F3 /* GalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B6229249822373946C10154 /* GalleryView.swift */; };
+		CBFC2660979FA712F72043F3 /* PassRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F7AD8362019A2DA88E9B0DD /* PassRecorder.swift */; };
+		DFF97473F33789CB24CB8E30 /* WaterfallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 071BCDD44B747B66F6485F9E /* WaterfallView.swift */; };
 		F895A123FE574AC0BF7AF503 /* sstv-core.js in Resources */ = {isa = PBXBuildFile; fileRef = 866350584DC14C9083A97630 /* sstv-core.js */; };
 		6B219AF3ED284A399EE353F7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B91A9FAADC90432F85FC168A /* Assets.xcassets */; };
 		E90E4DBA39A045819D410495 /* SSTVStudioApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSTVStudioApp.swift; sourceTree = "<group>"; };
@@ -25,6 +29,10 @@
 		26379819D7E24A779478FFBC /* MakeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakeView.swift; sourceTree = "<group>"; };
 		69F6455809B54F7D90147A2B /* DecodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecodeView.swift; sourceTree = "<group>"; };
 		B3DD7C15A59447A098132756 /* ShareSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareSheet.swift; sourceTree = "<group>"; };
+		7253B5FD74199097D70DA3ED /* GalleryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryStore.swift; sourceTree = "<group>"; };
+		9B6229249822373946C10154 /* GalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryView.swift; sourceTree = "<group>"; };
+		4F7AD8362019A2DA88E9B0DD /* PassRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassRecorder.swift; sourceTree = "<group>"; };
+		071BCDD44B747B66F6485F9E /* WaterfallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaterfallView.swift; sourceTree = "<group>"; };
 		866350584DC14C9083A97630 /* sstv-core.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = sstv-core.js; sourceTree = "<group>"; };
 		B91A9FAADC90432F85FC168A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F4907E40B88B4863BD44A80A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -49,6 +57,10 @@
 				26379819D7E24A779478FFBC /* MakeView.swift */,
 				69F6455809B54F7D90147A2B /* DecodeView.swift */,
 				B3DD7C15A59447A098132756 /* ShareSheet.swift */,
+				7253B5FD74199097D70DA3ED /* GalleryStore.swift */,
+				9B6229249822373946C10154 /* GalleryView.swift */,
+				4F7AD8362019A2DA88E9B0DD /* PassRecorder.swift */,
+				071BCDD44B747B66F6485F9E /* WaterfallView.swift */,
 				866350584DC14C9083A97630 /* sstv-core.js */,
 				B91A9FAADC90432F85FC168A /* Assets.xcassets */,
 				F4907E40B88B4863BD44A80A /* Info.plist */,
@@ -120,6 +132,10 @@
 				6707CE84E7F64E979A980361 /* MakeView.swift in Sources */,
 				891B2920869A4B768987B8AC /* DecodeView.swift in Sources */,
 				2095553794264E7AA34EB4DD /* ShareSheet.swift in Sources */,
+				FADDF791925ECFEBCDEBC1FC /* GalleryStore.swift in Sources */,
+				488F470A669809222508D4F3 /* GalleryView.swift in Sources */,
+				CBFC2660979FA712F72043F3 /* PassRecorder.swift in Sources */,
+				DFF97473F33789CB24CB8E30 /* WaterfallView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -252,9 +268,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_KEY_CFBundleIconName = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SSTVStudio/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -277,9 +294,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_KEY_CFBundleIconName = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SSTVStudio/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

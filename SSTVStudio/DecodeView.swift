@@ -77,7 +77,10 @@ struct DecodeView: View {
             samples: audio.samples, sampleRate: audio.sampleRate, modeHint: modeHint) { image in
             if let image = image {
                 decoded = image
-                status = "Picture decoded — \(image.mode), \(image.syncCount) sync pulses."
+                status = "Picture decoded — \(image.mode), \(image.syncCount) sync pulses. Auto-saved to Gallery and Photos."
+                GalleryStore.shared.save(
+                    image: image.uiImage, mode: image.mode,
+                    source: "Decode", frequency: nil)
             } else {
                 decoded = nil
                 status = "No SSTV picture found in that file."

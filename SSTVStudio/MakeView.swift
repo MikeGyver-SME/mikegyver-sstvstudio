@@ -129,7 +129,10 @@ struct MakeView: View {
         SSTVEngine.shared.decode(samples: samples, sampleRate: 44100, modeHint: "auto") { image in
             if let image = image {
                 decodedBack = image
-                status = "Decoded back cleanly — \(image.mode)."
+                status = "Decoded back cleanly — \(image.mode). Auto-saved to Gallery and Photos."
+                GalleryStore.shared.save(
+                    image: image.uiImage, mode: image.mode,
+                    source: "Make", frequency: nil)
             } else {
                 status = "Decode-back found nothing."
             }

@@ -9,7 +9,14 @@ final class MicListener: ObservableObject {
     @Published var status: String = "Tap Listen, then hold the phone near a speaker or radio."
     @Published var decoded: DecodedSSTVImage?
     @Published var isListening = false
+    @Published var recordingURL: URL?
+    @Published var recordingName: String?
     var keepListening = false
+
+    /// Live spectrogram of the SSTV tone range (1200-2300 Hz).
+    let waterfall = WaterfallModel()
+    /// Records the whole listening session to a WAV file.
+    let recorder = PassRecorder()
 
     private var engine: AVAudioEngine?
     private var inputRate: Double = 48000
@@ -28,6 +35,9 @@ final class MicListener: ObservableObject {
         bufferLock.lock(); buffer.removeAll(); bufferLock.unlock()
         decoded = nil
         decoding = false
+        recordingURL = nil
+        recordingName = nil
+        waterfall.clear()
         // Keep the screen awake while listening. Without this, auto-lock
         // suspends mic capture mid-picture (the app has no background
         // audio mode unless Info.plist adds one) and the decode comes out
@@ -48,6 +58,11 @@ final class MicListener: ObservableObject {
         let input = engine.inputNode
         let inFormat = input.outputFormat(forBus: 0)
         inputRate = inFormat.sampleRate
+        // Start the pass recording on the same tap stream as the decoder.
+        // 8 kHz mono WAV, named with the session start time.
+        if let recURL = recorder.start(inputSampleRate: inputRate) {
+            recordingName = recURL.lastPathComponent
+        }
         input.installTap(onBus: 0, bufferSize: 4096, format: inFormat) { [weak self] avBuffer, _ in
             self?.handleTap(buffer: avBuffer)
         }
@@ -73,6 +88,11 @@ final class MicListener: ObservableObject {
         }
         engine = nil
         isListening = false
+        // Finalise the pass recording (patches the WAV header) and publish it.
+        if let finished = recorder.finish() {
+            recordingURL = finished
+            recordingName = finished.lastPathComponent
+        }
         DispatchQueue.main.async { [weak self] in
             self?.level = 0
             // Listening is over — the screen may sleep again.
@@ -94,6 +114,10 @@ final class MicListener: ObservableObject {
         let rms = sqrt(sum / Float(frames))
         let lvl = min(1, rms * 4)
         DispatchQueue.main.async { [weak self] in self?.level = lvl }
+        // Same tap stream feeds the waterfall and the pass recording.
+        // Both are throttled / incremental, so they cannot starve the decoder.
+        waterfall.feed(samples: mono, sampleRate: inputRate)
+        recorder.append(mono)
         bufferLock.lock()
         buffer.append(contentsOf: mono)
         let maxSamples = Int(maxBufferSeconds * inputRate)
@@ -120,7 +144,12 @@ final class MicListener: ObservableObject {
                 guard let image = image else { return }
                 DispatchQueue.main.async {
                     self.decoded = image
-                    self.status = "Picture received — \(image.mode), \(image.syncCount) sync pulses."
+                    // Auto-save: gallery copy + Photos copy, so the picture
+                    // survives even if the app closes or the screen locks.
+                    GalleryStore.shared.save(
+                        image: image.uiImage, mode: image.mode,
+                        source: "Listen", frequency: "437.550 MHz")
+                    self.status = "Picture received — \(image.mode), \(image.syncCount) sync pulses. Auto-saved to Gallery and Photos."
                     if self.keepListening {
                         self.bufferLock.lock(); self.buffer.removeAll(); self.bufferLock.unlock()
                     } else {
@@ -183,6 +212,7 @@ struct ListenView: View {
                         }
                     }.frame(height: 14)
                 }
+                WaterfallView(model: listener.waterfall)
                 Button(action: toggleListen) {
                     Text(listener.isListening ? "Stop Listening" : "Start Listening")
                         .font(.headline).foregroundColor(.white)
@@ -199,6 +229,8 @@ struct ListenView: View {
                         .resizable().scaledToFit().cornerRadius(8)
                     Text("\(img.mode) · \(img.syncCount) sync pulses · VIS \(img.visCode ?? -1)")
                         .font(.caption).foregroundColor(.secondary)
+                    Text("Auto-saved to Gallery and Photos.")
+                        .font(.caption).foregroundColor(.secondary)
                     HStack {
                         Button("Save to Photos") { saveToPhotos(img.uiImage) }
                         Button("Share") {
@@ -206,6 +238,24 @@ struct ListenView: View {
                             showShare = true
                         }
                     }.buttonStyle(.bordered)
+                }
+                if let recURL = listener.recordingURL, !listener.isListening {
+                    VStack(spacing: 6) {
+                        Text("Pass recording saved")
+                            .font(.headline)
+                        Text(listener.recordingName ?? recURL.lastPathComponent)
+                            .font(.caption).foregroundColor(.secondary)
+                        Text("8 kHz mono WAV — open it in the Decode tab to re-decode the pass.")
+                            .font(.caption).foregroundColor(.secondary)
+                            .multilineTextAlignment(.center)
+                        Button("Share Recording") {
+                            shareItems = [recURL]
+                            showShare = true
+                        }.buttonStyle(.bordered)
+                    }
+                    .padding()
+                    .background(Color.gray.opacity(0.12))
+                    .cornerRadius(10)
                 }
             }.padding()
         }
