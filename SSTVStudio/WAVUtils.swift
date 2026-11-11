@@ -8,7 +8,14 @@ enum WAVUtils {
 
     /// Write mono float32 samples as a 16-bit PCM .wav file in the temp
     /// directory. Returns the file URL, or nil on failure.
-    static func writeWAV(samples: Data, sampleRate: Double, fileName: String) -> URL? {
+    /// If `secretEnvelope` is given (a Secret Note envelope), it is
+    /// embedded as a trailing RIFF chunk "SSTV" containing the
+    /// "SSTVNOTE" trailer — the audio itself is untouched, and ordinary
+    /// players / AVAudioFile read the data chunk and ignore the rest.
+    /// The RIFF size is updated to include the chunk, so the file stays
+    /// well-formed.
+    static func writeWAV(samples: Data, sampleRate: Double, fileName: String,
+                         secretEnvelope: Data? = nil) -> URL? {
         let count = samples.count / 4
         guard count > 0 else { return nil }
         var floats = [Float](repeating: 0, count: count)
@@ -29,8 +36,21 @@ enum WAVUtils {
             data.append(contentsOf: withUnsafeBytes(of: &x) { Array($0) })
         }
         let dataSize = UInt32(count * 2)
+        // Trailing secret chunk, if any: "SSTV" + size + trailer (+ pad).
+        var secretChunk: Data?
+        if let envelope = secretEnvelope {
+            var chunk = Data()
+            let trailer = SecretNote.trailer(for: envelope)
+            chunk.append(contentsOf: [0x53, 0x53, 0x54, 0x56]) // "SSTV"
+            var size = UInt32(trailer.count).littleEndian
+            chunk.append(contentsOf: withUnsafeBytes(of: &size) { Array($0) })
+            chunk.append(trailer)
+            if trailer.count % 2 == 1 { chunk.append(0) } // RIFF chunks are word-aligned
+            secretChunk = chunk
+        }
+        let extraSize = UInt32(secretChunk?.count ?? 0)
         appendBytes([0x52, 0x49, 0x46, 0x46]) // "RIFF"
-        append32(36 + dataSize)
+        append32(36 + dataSize + extraSize)
         appendBytes([0x57, 0x41, 0x56, 0x45]) // "WAVE"
         appendBytes([0x66, 0x6D, 0x74, 0x20]) // "fmt "
         append32(16)
@@ -43,6 +63,7 @@ enum WAVUtils {
         appendBytes([0x64, 0x61, 0x74, 0x61]) // "data"
         append32(dataSize)
         pcm.withUnsafeBytes { data.append(contentsOf: $0) }
+        if let secretChunk = secretChunk { data.append(secretChunk) }
         let url = FileManager.default.temporaryDirectory
             .appendingPathComponent(fileName)
         do {

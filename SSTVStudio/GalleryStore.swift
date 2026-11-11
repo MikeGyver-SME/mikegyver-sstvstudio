@@ -46,9 +46,17 @@ final class GalleryStore: ObservableObject {
     /// Auto-save a decoded picture. Safe to call from any thread; the
     /// published list is updated on the main thread. Returns the item, or
     /// nil if the image could not be written.
+    /// If `secretEnvelope` is given, the envelope is appended as a
+    /// trailer to the Gallery PNG file on disk (decoders ignore trailing
+    /// data). The Photos-library copy is re-encoded by iOS and loses
+    /// the trailer — the Gallery file is the record.
     @discardableResult
-    func save(image: UIImage, mode: String, source: String, frequency: String?) -> SSTVGalleryItem? {
-        guard let png = image.pngData() else { return nil }
+    func save(image: UIImage, mode: String, source: String, frequency: String?,
+              secretEnvelope: Data? = nil) -> SSTVGalleryItem? {
+        guard var png = image.pngData() else { return nil }
+        if let envelope = secretEnvelope {
+            png = SecretNote.pngWithSecret(png, envelope: envelope)
+        }
         let id = UUID()
         let item = SSTVGalleryItem(
             id: id, date: Date(), mode: mode, source: source,

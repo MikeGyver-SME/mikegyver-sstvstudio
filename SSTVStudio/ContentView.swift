@@ -11,6 +11,8 @@ struct ContentView: View {
                 .tabItem { Label("Decode", systemImage: "waveform.badge.magnifyingglass") }
             GalleryView()
                 .tabItem { Label("Gallery", systemImage: "photo.on.rectangle") }
+            CodebookView()
+                .tabItem { Label("Codebook", systemImage: "book") }
         }
     }
 }

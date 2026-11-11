@@ -9,6 +9,11 @@ struct DecodeView: View {
     @State private var fileName = ""
     @State private var shareItems: [Any] = []
     @State private var showShare = false
+    // Secret Note found in the picked file (WAV trailer chunk).
+    @State private var secretEnvelope: Data?
+    @State private var secretPassphrase = ""
+    @State private var secretNote: String?
+    @State private var secretMessage = ""
 
     var body: some View {
         ScrollView {
@@ -43,6 +48,33 @@ struct DecodeView: View {
                         }
                     }.buttonStyle(.bordered)
                 }
+                // Secret Note in this file, if the sender embedded one.
+                // A live radio decode cannot carry a note — only a file can.
+                if secretEnvelope != nil {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("🔒 This file has a secret note")
+                            .font(.headline)
+                        if let note = secretNote {
+                            Text(note)
+                                .font(.body)
+                                .padding(8)
+                                .background(Color.gray.opacity(0.12))
+                                .cornerRadius(8)
+                        } else {
+                            SecureField("Passphrase", text: $secretPassphrase)
+                                .textFieldStyle(.roundedBorder)
+                            Button("Unlock Note") { unlockSecret() }
+                                .buttonStyle(.borderedProminent)
+                            if !secretMessage.isEmpty {
+                                Text(secretMessage)
+                                    .font(.caption).foregroundColor(.secondary)
+                            }
+                        }
+                    }
+                    .padding()
+                    .background(Color.gray.opacity(0.12))
+                    .cornerRadius(10)
+                }
             }.padding()
         }
         .fileImporter(
@@ -63,11 +95,19 @@ struct DecodeView: View {
     func decodeFile(url: URL) {
         fileName = url.lastPathComponent
         status = "Reading \(fileName)…"
+        secretEnvelope = nil
+        secretNote = nil
+        secretPassphrase = ""
+        secretMessage = ""
         guard url.startAccessingSecurityScopedResource() else {
             status = "Could not access that file."
             return
         }
         defer { url.stopAccessingSecurityScopedResource() }
+        // A secret note lives in the file's trailer chunk, not in the tones.
+        if let env = SecretNote.extractEnvelope(fromFile: url) {
+            secretEnvelope = env
+        }
         guard let audio = WAVUtils.readAudio(url: url) else {
             status = "Could not read that audio file."
             return
@@ -85,6 +125,21 @@ struct DecodeView: View {
                 decoded = nil
                 status = "No SSTV picture found in that file."
             }
+        }
+    }
+
+    func unlockSecret() {
+        guard let envelope = secretEnvelope else { return }
+        guard !secretPassphrase.isEmpty else {
+            secretMessage = "Enter the passphrase."
+            return
+        }
+        if let note = SecretNote.decrypt(envelopeData: envelope, passphrase: secretPassphrase) {
+            secretNote = note
+            secretMessage = ""
+        } else {
+            secretNote = nil
+            secretMessage = "Wrong passphrase."
         }
     }
 

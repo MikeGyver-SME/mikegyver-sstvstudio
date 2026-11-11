@@ -18,6 +18,10 @@
 		488F470A669809222508D4F3 /* GalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B6229249822373946C10154 /* GalleryView.swift */; };
 		CBFC2660979FA712F72043F3 /* PassRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F7AD8362019A2DA88E9B0DD /* PassRecorder.swift */; };
 		DFF97473F33789CB24CB8E30 /* WaterfallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 071BCDD44B747B66F6485F9E /* WaterfallView.swift */; };
+		3F1D58BA4E255DCD552CD40F /* SecretNote.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8CA6C10BF4DBE0EF2C1DD07 /* SecretNote.swift */; };
+		B60C2A1964B5EB320F0EAF5A /* CodebookStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A944B64ED19EC9E58B7507E /* CodebookStore.swift */; };
+		CBADDC24218355DAED61079D /* CodebookView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8193300D29E5A750DF5AD3D5 /* CodebookView.swift */; };
+		862B8C59CCE3018F2B3D3744 /* MathPuzzle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBCA00A00B2804A32BAEEDCD /* MathPuzzle.swift */; };
 		F895A123FE574AC0BF7AF503 /* sstv-core.js in Resources */ = {isa = PBXBuildFile; fileRef = 866350584DC14C9083A97630 /* sstv-core.js */; };
 		6B219AF3ED284A399EE353F7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B91A9FAADC90432F85FC168A /* Assets.xcassets */; };
 		E90E4DBA39A045819D410495 /* SSTVStudioApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSTVStudioApp.swift; sourceTree = "<group>"; };
@@ -33,6 +37,10 @@
 		9B6229249822373946C10154 /* GalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryView.swift; sourceTree = "<group>"; };
 		4F7AD8362019A2DA88E9B0DD /* PassRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassRecorder.swift; sourceTree = "<group>"; };
 		071BCDD44B747B66F6485F9E /* WaterfallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaterfallView.swift; sourceTree = "<group>"; };
+		E8CA6C10BF4DBE0EF2C1DD07 /* SecretNote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecretNote.swift; sourceTree = "<group>"; };
+		1A944B64ED19EC9E58B7507E /* CodebookStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodebookStore.swift; sourceTree = "<group>"; };
+		8193300D29E5A750DF5AD3D5 /* CodebookView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodebookView.swift; sourceTree = "<group>"; };
+		CBCA00A00B2804A32BAEEDCD /* MathPuzzle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathPuzzle.swift; sourceTree = "<group>"; };
 		866350584DC14C9083A97630 /* sstv-core.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = sstv-core.js; sourceTree = "<group>"; };
 		B91A9FAADC90432F85FC168A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F4907E40B88B4863BD44A80A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -61,6 +69,10 @@
 				9B6229249822373946C10154 /* GalleryView.swift */,
 				4F7AD8362019A2DA88E9B0DD /* PassRecorder.swift */,
 				071BCDD44B747B66F6485F9E /* WaterfallView.swift */,
+				E8CA6C10BF4DBE0EF2C1DD07 /* SecretNote.swift */,
+				1A944B64ED19EC9E58B7507E /* CodebookStore.swift */,
+				8193300D29E5A750DF5AD3D5 /* CodebookView.swift */,
+				CBCA00A00B2804A32BAEEDCD /* MathPuzzle.swift */,
 				866350584DC14C9083A97630 /* sstv-core.js */,
 				B91A9FAADC90432F85FC168A /* Assets.xcassets */,
 				F4907E40B88B4863BD44A80A /* Info.plist */,
@@ -136,6 +148,10 @@
 				488F470A669809222508D4F3 /* GalleryView.swift in Sources */,
 				CBFC2660979FA712F72043F3 /* PassRecorder.swift in Sources */,
 				DFF97473F33789CB24CB8E30 /* WaterfallView.swift in Sources */,
+				3F1D58BA4E255DCD552CD40F /* SecretNote.swift in Sources */,
+				B60C2A1964B5EB320F0EAF5A /* CodebookStore.swift in Sources */,
+				CBADDC24218355DAED61079D /* CodebookView.swift in Sources */,
+				862B8C59CCE3018F2B3D3744 /* MathPuzzle.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -271,7 +287,7 @@
 				INFOPLIST_KEY_CFBundleIconName = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SSTVStudio/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -297,7 +313,7 @@
 				INFOPLIST_KEY_CFBundleIconName = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SSTVStudio/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

@@ -4,7 +4,7 @@
   TestFlight build workflow).
 
 .DESCRIPTION
-  1. Uses the extracted sstv-studio-ios-v1.0.4 folder as the source of truth.
+  1. Uses the extracted sstv-studio-ios-v1.0.5 folder as the source of truth.
   2. Clones MikeGyver-SME/mikegyver-sstvstudio if needed (else pulls main).
   3. Copies the source in, commits, pushes.
   4. Creates and pushes the version tag -> the "Build and upload SSTV Studio to
@@ -14,7 +14,7 @@
   fixed Info.plist, and the AppIcon set - nothing to drop in first.
 
 .PARAMETER SourceDir
-  The extracted source folder. Defaults to E:\Downloads when it exists, else your shell Downloads folder\sstv-studio-ios-v1.0.4
+  The extracted source folder. Defaults to E:\Downloads when it exists, else your shell Downloads folder\sstv-studio-ios-v1.0.5
   (resolved via the Windows shell, so relocated Downloads folders work).
 
 .PARAMETER RepoDir
@@ -22,27 +22,27 @@
   user profile.
 
 .PARAMETER Tag
-  Version tag to create and push, e.g. v1.0.4. The workflow runs on tags
+  Version tag to create and push, e.g. v1.0.5. The workflow runs on tags
   matching v*.
 
 .EXAMPLE
   powershell -ExecutionPolicy Bypass -File .\push-sstvstudio.ps1
-  # uses defaults, tags v1.0.4
+  # uses defaults, tags v1.0.5
 
 .EXAMPLE
   powershell -ExecutionPolicy Bypass -File .\push-sstvstudio.ps1 -Tag v1.0.5
 #>
 param(
-    [string]$SourceDir = (Join-Path (& { if (Test-Path 'E:\Downloads') { 'E:\Downloads' } else { try { (New-Object -ComObject Shell.Application).NameSpace('shell:Downloads').Self.Path } catch { "$env:USERPROFILE\Downloads" } } }) 'sstv-studio-ios-v1.0.4'),
+    [string]$SourceDir = (Join-Path (& { if (Test-Path 'E:\Downloads') { 'E:\Downloads' } else { try { (New-Object -ComObject Shell.Application).NameSpace('shell:Downloads').Self.Path } catch { "$env:USERPROFILE\Downloads" } } }) 'sstv-studio-ios-v1.0.5'),
     [string]$RepoDir   = (Join-Path $env:USERPROFILE 'source\repos\mikegyver-sstvstudio'),
-    [string]$Tag       = 'v1.0.4'
+    [string]$Tag       = 'v1.0.5'
 )
 
 $ErrorActionPreference = 'Stop'
 $RepoSlug = 'MikeGyver-SME/mikegyver-sstvstudio'
 
 if (-not (Test-Path $SourceDir)) {
-    throw "Source folder not found: $SourceDir`nExtract sstv-studio-ios-v1.0.4.zip first."
+    throw "Source folder not found: $SourceDir`nExtract sstv-studio-ios-v1.0.5.zip first."
 }
 
 # --- 1. Clone or update ------------------------------------------------------

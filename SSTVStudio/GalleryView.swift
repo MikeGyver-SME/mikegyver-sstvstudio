@@ -80,6 +80,12 @@ struct GalleryDetailView: View {
     @State private var shareItems: [Any] = []
     @State private var showShare = false
     @State private var savedMessage = ""
+    // Secret Note embedded in this Gallery PNG file (Make decode-back
+    // only — the Photos copy loses the trailer when iOS re-encodes it).
+    @State private var secretEnvelope: Data?
+    @State private var secretPassphrase = ""
+    @State private var secretNote: String?
+    @State private var secretMessage = ""
 
     var body: some View {
         ScrollView {
@@ -114,9 +120,44 @@ struct GalleryDetailView: View {
                 if !savedMessage.isEmpty {
                     Text(savedMessage).font(.caption).foregroundColor(.secondary)
                 }
+                if secretEnvelope != nil {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("🔒 This picture has a secret note")
+                            .font(.headline)
+                        if let note = secretNote {
+                            Text(note).font(.body)
+                        } else {
+                            SecureField("Passphrase", text: $secretPassphrase)
+                                .textFieldStyle(.roundedBorder)
+                            Button("Unlock Note") {
+                                guard let env = secretEnvelope else { return }
+                                if secretPassphrase.isEmpty {
+                                    secretMessage = "Enter the passphrase."
+                                } else if let note = SecretNote.decrypt(envelopeData: env, passphrase: secretPassphrase) {
+                                    secretNote = note
+                                    secretMessage = ""
+                                } else {
+                                    secretMessage = "Wrong passphrase."
+                                }
+                            }
+                            .buttonStyle(.borderedProminent)
+                            if !secretMessage.isEmpty {
+                                Text(secretMessage).font(.caption).foregroundColor(.secondary)
+                            }
+                        }
+                    }
+                    .padding()
+                    .background(Color.gray.opacity(0.12))
+                    .cornerRadius(10)
+                }
             }
             .padding()
         }
         .sheet(isPresented: $showShare) { ShareSheet(items: shareItems) }
+        .onAppear {
+            // The Gallery PNG may carry a secret trailer (Make decode-back).
+            secretEnvelope = SecretNote.extractEnvelope(
+                fromFile: GalleryStore.shared.url(for: item))
+        }
     }
 }
